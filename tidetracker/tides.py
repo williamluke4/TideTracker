@@ -6,7 +6,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
-from tidetracker import constants
+from tidetracker import config
 
 
 # Get High and Low tide info for today
@@ -14,8 +14,8 @@ def get_tide_extremes():
     start_today = datetime.combine(date.today(), datetime.min.time())
     duration = 24 * 60  # 1 day in mins
     querystring = {
-        "longitude": constants.LONGITUDE,
-        "latitude": constants.LATITUDE,
+        "longitude": config.LONGITUDE,
+        "latitude": config.LATITUDE,
         "interval": "60",
         "duration": duration,
         "timestamp": int(start_today.timestamp()),
@@ -23,8 +23,8 @@ def get_tide_extremes():
 
     response = requests.request(
         "GET",
-        constants.RAPIDAPI_URL,
-        headers=constants.RAPIDAPI_HEADERS,
+        config.RAPIDAPI_URL,
+        headers=config.RAPIDAPI_HEADERS,
         params=querystring,
     )
     data = response.json()
@@ -73,8 +73,8 @@ def get_tide_data_for_plot():
     interval = 30
     duration = 24 * 60  # mins from timestamp
     querystring = {
-        "longitude": constants.LONGITUDE,
-        "latitude": constants.LATITUDE,
+        "longitude": config.LONGITUDE,
+        "latitude": config.LATITUDE,
         "interval": interval,
         "duration": duration,
         "timestamp": int(yesterday.timestamp()),
@@ -82,11 +82,12 @@ def get_tide_data_for_plot():
 
     response = requests.request(
         "GET",
-        constants.RAPIDAPI_URL,
-        headers=constants.RAPIDAPI_HEADERS,
+        config.RAPIDAPI_URL,
+        headers=config.RAPIDAPI_HEADERS,
         params=querystring,
     )
     data = response.json()
+    print(data)
     heights = data["heights"]
     heightsDF = pd.DataFrame(
         heights, columns=["timestamp", "datetime", "height", "state"]

@@ -19,7 +19,7 @@ Restart=always
 RestartSec=10
 WorkingDirectory=$PWD
 User=$USER
-ExecStart=/usr/bin/python3 ./tidetracker/run.py
+ExecStart=/usr/bin/python3 -m tidetracker.run
 [Install]
 WantedBy=multi-user.target
 EOF

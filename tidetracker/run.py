@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import datetime as dt
 import json
 import os
@@ -13,7 +15,7 @@ import pandas as pd
 import requests
 from PIL import Image, ImageDraw
 
-from tidetracker import constants, style, tides
+from tidetracker import config, style, tides
 from tidetracker import weather as weath
 from tidetracker.screen import Screen
 
@@ -59,7 +61,7 @@ def main():
         temp_min = daily_temp["min"]
 
         # Set strings to be printed to screen
-        string_location = constants.LOCATION
+        string_location = config.LOCATION
         string_temp_current = format(temp_current, ".0f") + "\N{DEGREE SIGN}C"
         string_feels_like = "Feels like: " + format(feels_like, ".0f") + "\N{DEGREE SIGN}C"
         string_humidity = "Humidity: " + str(humidity) + "%"
@@ -121,18 +123,18 @@ def main():
         tides.plot_tide(tidesDataFrame)
 
         # Open template file
-        template = Image.open(os.path.join(constants.PIC_DIR, "template.png"))
+        template = Image.open(os.path.join(config.PIC_DIR, "template.png"))
         # Initialize the drawing context with template as background
         draw = ImageDraw.Draw(template)
 
         # Current weather
         ## Open icon file
         icon_file = icon_code + ".png"
-        icon_image = Image.open(os.path.join(constants.ICON_DIR, icon_file))
+        icon_image = Image.open(os.path.join(config.ICON_DIR, icon_file))
         icon_image = icon_image.resize((130, 130))
         template.paste(icon_image, (50, 50))
 
-        draw.text((125, 10), constants.LOCATION, font=style.FONT_35, fill=style.BLACK)
+        draw.text((125, 10), config.LOCATION, font=style.FONT_35, fill=style.BLACK)
 
         # Center current weather report
         w, h = draw.textsize(string_report, font=style.FONT_20)
@@ -159,7 +161,7 @@ def main():
         # Weather Forcast
         # Tomorrow
         icon_file = nx_icon + ".png"
-        icon_image = Image.open(os.path.join(constants.ICON_DIR, icon_file))
+        icon_image = Image.open(os.path.join(config.ICON_DIR, icon_file))
         icon_image = icon_image.resize((130, 130))
         template.paste(icon_image, (435, 50))
         draw.text((450, 20), "Tomorrow", font=style.FONT_22, fill=style.BLACK)
@@ -169,7 +171,7 @@ def main():
 
         # Next Next Day Forcast
         icon_file = nx_nx_icon + ".png"
-        icon_image = Image.open(os.path.join(constants.ICON_DIR, icon_file))
+        icon_image = Image.open(os.path.join(config.ICON_DIR, icon_file))
         icon_image = icon_image.resize((130, 130))
         template.paste(icon_image, (635, 50))
         draw.text((625, 20), "Next-Next Day", font=style.FONT_22, fill=style.BLACK)
@@ -183,7 +185,7 @@ def main():
 
         # Tide Info
         # Graph
-        tidegraph = Image.open(os.path.join(constants.PIC_DIR, "TideLevel.png"))
+        tidegraph = Image.open(os.path.join(config.PIC_DIR, "TideLevel.png"))
         template.paste(tidegraph, (125, 240))
 
         # Large horizontal dividing line
@@ -220,12 +222,12 @@ def main():
             y_loc += 25  # This bumps the next prediction down a line
 
         # Save the image for display as PNG
-        screen_output_file = os.path.join(constants.PIC_DIR, "screen_output.png")
+        screen_output_file = os.path.join(config.PIC_DIR, "screen_output.png")
         template.save(screen_output_file)
         # Close the template file
         template.close()
 
-        screen.write_to_screen(screen_output_file, constants.SLEEP_MINUTES * 60)
+        screen.write_to_screen(screen_output_file, config.SLEEP_MINUTES * 60)
 
 if __name__ == "__main__":
     main()

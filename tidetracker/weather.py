@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from tidetracker import constants
+from tidetracker import config
 from tidetracker.screen import Screen
 
 
@@ -14,7 +14,7 @@ def get_weather(screen: Screen):
         try:
             # HTTP request
             print("Attempting to connect to OWM.")
-            response = requests.get(constants.OPENWEATHERMAP_URL)
+            response = requests.get(config.OPENWEATHERMAP_URL)
             print("Connection to OWM successful.")
             error_connect = None
         except:

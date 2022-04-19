@@ -9,7 +9,7 @@ sys.path.append("lib")
 
 from PIL import ImageDraw
 from waveshare_epd import epd7in5_V2
-from tidetracker import constants, style
+from tidetracker import config, style
 
 
 # Initialize and clear screen
@@ -27,7 +27,7 @@ class Screen:
         # Create new blank image template matching screen resolution
         h_image = Image.new("1", (self.epd.width, self.epd.height), 255)
         # Open the template
-        screen_output_file = Image.open(os.path.join(constants.PIC_DIR, image))
+        screen_output_file = Image.open(os.path.join(config.PIC_DIR, image))
         # Initialize the drawing context with template as background
         h_image.paste(screen_output_file, (0, 0))
         self.epd.display(self.epd.getbuffer(h_image))
@@ -60,7 +60,7 @@ class Screen:
         )
         # Save the error image
         error_image_file = "error.png"
-        error_image.save(os.path.join(constants.PIC_DIR, error_image_file))
+        error_image.save(os.path.join(config.PIC_DIR, error_image_file))
         # Close error image
         error_image.close()
         # Write error to screen

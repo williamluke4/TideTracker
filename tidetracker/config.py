@@ -1,5 +1,5 @@
 from decouple import config
-
+import os
 # Optional, displayed on top left
 LOCATION = config("LOCATION", default="Kilifi Kenya")
 
