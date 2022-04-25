@@ -1,21 +1,25 @@
-from decouple import config
 import os
+
+from decouple import config
+
 # Optional, displayed on top left
 LOCATION = config("LOCATION", default="Kilifi Kenya")
 
 LATITUDE = config("LATITUDE", default="-3.67275")
 LONGITUDE = config("LONGITUDE", default="39.87769")
 
+TIME_ZONE = 'Africa/Nairobi'
+
 UNITS = config("UNITS", default="metric")
 
 # For weather data
 # Create Account on openweathermap.com and get API key
-OPENWEATHERMAP_API_KEY = config("OPENWEATHERMAP_API_KEY")
+OPENWEATHERMAP_API_KEY = config("OPENWEATHERMAP_API_KEY", default="")
 
 # RapidAPI Tides
 # Create Account on rapidapi.com, subscribe to :down: and get an API key
 # Docs: https://rapidapi.com/apihood/api/tides/
-RAPID_API_KEY = config("RAPID_API_KEY")
+RAPID_API_KEY = config("RAPID_API_KEY", default='')
 
 #  Time between refreshing the screen and data
 REFRESH_INTERVAL = config("REFRESH_INTERVAL", default=10, cast=int)  # mins
@@ -42,6 +46,8 @@ RAPIDAPI_HEADERS = {
 }
 
 
-PIC_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "images")
+PIC_DIR = os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), "..", "images")
 ICON_DIR = os.path.join(PIC_DIR, "icon")
-FONT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "font")
+FONT_DIR = os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), "..", "font")
