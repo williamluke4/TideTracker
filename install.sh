@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "Install System Requriements"
+sudo apt-get install python-dev libatlas-base-dev
 
 echo "Install Pythons Deps"
 python3 -m pip install -r requirements.txt
@@ -37,8 +39,13 @@ sudo systemctl enable tide.service
 sudo systemctl start tide.service
 sudo systemctl status tide.service
 echo ""
-echo "Setup Complete: To start/stop/etc.. "
+echo "Setup Complete"
+echo ""
+echo "To start/stop/etc.. "
 echo "> sudo systemctl start|stop|restart|status tide"
+echo ""
+echo "To view logs you can use:"
+echo "> sudo journalctl -u tide"
 echo ""
 echo "The config for the service lives here $service_location"
 echo ""

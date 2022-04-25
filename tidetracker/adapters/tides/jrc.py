@@ -10,32 +10,37 @@ TIME_ZONE = "Africa/Nairobi"
 
 
 def get_peaks_and_troughs(tide_df):
-    peaks, _ = signal.find_peaks(tide_df['height'])
-    troughs, _ = signal.find_peaks(-tide_df['height'])
+    peaks, _ = signal.find_peaks(tide_df["height"])
+    troughs, _ = signal.find_peaks(-tide_df["height"])
 
     peaks_troughs = []
     for peak in peaks:
-        peaks_troughs.append({
-            "datetime": tide_df.iloc[peak]['datetime'],
-            "height": tide_df.iloc[peak]['height'],
-            "state": "HIGH TIDE"
-        })
+        peaks_troughs.append(
+            {
+                "datetime": tide_df.iloc[peak]["datetime"],
+                "height": tide_df.iloc[peak]["height"],
+                "state": "HIGH TIDE",
+            }
+        )
     for trough in troughs:
-        peaks_troughs.append({
-            "datetime": tide_df.iloc[trough]['datetime'],
-            "height": tide_df.iloc[trough]['height'],
-            "state": "LOW TIDE"
-        })
+        peaks_troughs.append(
+            {
+                "datetime": tide_df.iloc[trough]["datetime"],
+                "height": tide_df.iloc[trough]["height"],
+                "state": "LOW TIDE",
+            }
+        )
 
     peaks_troughs_df = pd.DataFrame(
         peaks_troughs, columns=["datetime", "height", "state"]
     )
+    peaks_troughs_df.index = peaks_troughs_df["datetime"]
     return peaks_troughs_df
 
 
 def get():
-    from_time = arrow.utcnow().shift(hours=-12).format('YYYY-MM-DD HH:mm:ss')
-    to_time = arrow.utcnow().shift(hours=12).format('YYYY-MM-DD HH:mm:ss')
+    from_time = arrow.utcnow().shift(hours=-12).format("YYYY-MM-DD HH:mm:ss")
+    to_time = arrow.utcnow().shift(hours=12).format("YYYY-MM-DD HH:mm:ss")
     querystring = {
         "tMin": from_time,
         "tMax": to_time,
@@ -50,23 +55,20 @@ def get():
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
         "sec-gpc": "1",
-        "x-requested-with": "XMLHttpRequest"
+        "x-requested-with": "XMLHttpRequest",
     }
     response = requests.request(
         "GET",
         f"{JRC_URL}{DEVICE_ID}/Data",
         params=querystring,
         headers=headers,
-
     )
     data = response.json()
-    tide_df = pd.DataFrame(
-        data, columns=["Date", "Value"]
+    tide_df = pd.DataFrame(data, columns=["Date", "Value"])
+    tide_df.rename(columns={"Date": "datetime", "Value": "height"}, inplace=True)
+    tide_df["datetime"] = pd.to_datetime(tide_df["datetime"]).dt.tz_convert(
+        config.TIME_ZONE
     )
-    tide_df.rename(columns={"Date": "datetime",
-                            "Value": "height"}, inplace=True)
-    tide_df["datetime"] = pd.to_datetime(
-        tide_df["datetime"]).dt.tz_convert(config.TIME_ZONE)
     tide_df["datetime"] = tide_df["datetime"]
     tide_df.index = tide_df["datetime"]
 

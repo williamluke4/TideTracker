@@ -1,4 +1,3 @@
-
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pytz
@@ -19,10 +18,10 @@ def tide(heights, show=False):
     for pos in ["right", "top", "bottom", "left"]:
         plt.gca().spines[pos].set_visible(False)
 
-    axs.xaxis.set_major_locator(mdates.DayLocator())
-    axs.xaxis.set_minor_locator(mdates.HourLocator())
-
     timezone = pytz.timezone(config.TIME_ZONE)
+    axs.xaxis.set_major_locator(mdates.DayLocator(tz=timezone))
+    axs.xaxis.set_minor_locator(mdates.HourLocator(tz=timezone))
+
     major_date_formatter = mdates.DateFormatter("%a", tz=timezone)
     minor_date_formatter = mdates.DateFormatter("%-H", tz=timezone)
     axs.xaxis.set_major_formatter(major_date_formatter)
